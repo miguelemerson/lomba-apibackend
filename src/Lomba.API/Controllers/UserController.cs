@@ -82,5 +82,36 @@ namespace Lomba.API.Controllers
             }
         }
         #endregion
+
+        #region Get Users
+        /// <summary>
+        /// Autenticación de usuario a través de su usuario y contraseña
+        /// </summary>
+        /// <returns>Una lista de usuarios</returns>
+        /// <response code="200">Retorna el usuario</response>
+        /// <response code="400">Error en el proceso</response>     
+        /// <response code="404">Usuario no encontrado</response>  
+        [HttpPost("authenticate")]
+        [ProducesResponseType(typeof(UserLogged), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(APIResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(APIResponse), StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetAuthenticateAsync(UserAuth userAuth)
+        {
+            try
+            {
+                var userLogged = await this._userService.AuthenticateAsync(userAuth);
+                if (userLogged == null)
+                {
+                    return NotFound(new APIResponse() { Code = 9, Message = "Usuario no autenticado." });
+                }
+                return Ok(userLogged);
+            }
+            catch (Exception)
+            {
+                return BadRequest(new APIResponse() { Code = 9, Message = "Usuario no autenticado." });
+            }
+        }
+        #endregion
+
     }
 }

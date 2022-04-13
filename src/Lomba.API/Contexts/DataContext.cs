@@ -13,8 +13,6 @@ namespace Lomba.API.Contexts
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {
-            Console.WriteLine($"Conn: {Configuration.GetConnectionString("SQLServerDatabase")}");
-
             options.UseSqlServer(connectionString: Configuration.GetConnectionString("SQLServerDatabase"));
         }
 

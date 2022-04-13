@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using Newtonsoft.Json;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Lomba.API.Models
 {
@@ -23,8 +24,8 @@ namespace Lomba.API.Models
         public string? Email { get; set; }
 
         [JsonIgnore]
-        public byte[]? PasswordHash { get; set; }
+        public byte[] PasswordHash { get; set; }
         [JsonIgnore]
-        public byte[]? PasswordSalt { get; set; }
+        public byte[] PasswordSalt { get; set; }
     }
 }

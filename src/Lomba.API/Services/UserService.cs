@@ -42,18 +42,16 @@ namespace Lomba.API.Services
                 {
                     throw new Exception("Usuario no existe, no es válido o contraseña es incorrecta");
                 }
-                
-                UserLogged userLogged = new UserLogged();
 
                 //verifica password
                 if (!VerifyPasswordHash(loginRequest.Password, user.PasswordHash, user.PasswordSalt))
                 {
                     throw new Exception("Usuario no existe, no es válido o contraseña es incorrecta");
-
                 }
 
                 var token = this.GenerateJwtToken(user, DateTime.UtcNow.AddDays(7));
 
+                UserLogged userLogged = new UserLogged();
                 userLogged.Token = token;
                 userLogged.Username = user.Username;
 
@@ -88,7 +86,7 @@ namespace Lomba.API.Services
             await _db.SaveChangesAsync();
         }
 
-        private static bool VerifyPasswordHash(string password, byte[] storedHash, byte[] storedSalt)
+        public static bool VerifyPasswordHash(string password, byte[] storedHash, byte[] storedSalt)
         {
             if (string.IsNullOrWhiteSpace(password)) throw new ArgumentNullException(nameof(password));
 
