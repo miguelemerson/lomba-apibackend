@@ -15,7 +15,7 @@ namespace Lomba.API.Models
         [StringLength(20)]
         public string? Username { get; set; }
 
-        [StringLength(100)]
+        [StringLength(200)]
         [Display(Name = "Nombre y Apellido")]
         public string? Name { get; set; }
 
@@ -27,5 +27,6 @@ namespace Lomba.API.Models
         public byte[] PasswordHash { get; set; }
         [JsonIgnore]
         public byte[] PasswordSalt { get; set; }
+
     }
 }

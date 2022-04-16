@@ -86,6 +86,15 @@ namespace Lomba.API.Services
             await _db.SaveChangesAsync();
         }
 
+        public async Task<List<OrgaUser>> GetOrgasByUserIdAsync(Guid Id)
+        {
+            return await _db.Set<OrgaUser>().AsNoTracking()
+                .Include(u => u.User)
+                .Include(r => r.Roles)
+                .Include(g => g.Orga)
+                .Where(o => o.User.Id == Id).ToListAsync();
+        }
+
         public static bool VerifyPasswordHash(string password, byte[] storedHash, byte[] storedSalt)
         {
             if (string.IsNullOrWhiteSpace(password)) throw new ArgumentNullException(nameof(password));
@@ -133,6 +142,22 @@ namespace Lomba.API.Services
                 passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
             }
         }
+
+        public async Task<User> SetEnableAsync(Guid Id, bool setToDisable = false)
+        {
+            var user = await _db.Set<User>()
+            .SingleOrDefaultAsync(x =>
+                    x.Id == Id);
+
+            if (user.IsDisabled != setToDisable)
+            {
+                user.IsDisabled = setToDisable;
+                user.UpdatedAt = DateTime.UtcNow;
+                await _db.SaveChangesAsync();
+            }
+
+            return user;
+        }
     }
 
     public interface IUserService
@@ -141,5 +166,7 @@ namespace Lomba.API.Services
         Task<User> GetUserByIdAsync(Guid Id);
         Task<List<User>> GetUsersAsync();
         void DeleteUserAsync(Guid Id);
+        Task<User> SetEnableAsync(Guid Id, bool enable = true);
+        Task<List<OrgaUser>> GetOrgasByUserIdAsync(Guid Id);
     }
 }

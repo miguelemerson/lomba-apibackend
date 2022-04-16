@@ -11,3 +11,9 @@ dotnet_diagnostic.CS8618.severity = silent
 
 # CS8601: Posible asignación de referencia nula
 dotnet_diagnostic.CS8601.severity = silent
+
+# CS8602: Desreferencia de una referencia posiblemente NULL.
+dotnet_diagnostic.CS8602.severity = silent
+
+# CS8625: No se puede convertir un literal NULL en un tipo de referencia que no acepta valores NULL.
+dotnet_diagnostic.CS8625.severity = silent
