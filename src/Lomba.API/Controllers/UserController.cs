@@ -83,7 +83,7 @@ namespace Lomba.API.Controllers
         }
         #endregion
 
-        #region Get Users
+        #region Authenticate Users
         /// <summary>
         /// Autenticación de usuario a través de su usuario y contraseña
         /// </summary>
@@ -109,6 +109,41 @@ namespace Lomba.API.Controllers
             catch (Exception)
             {
                 return BadRequest(new APIResponse() { Code = 9, Message = "Usuario no autenticado." });
+            }
+        }
+        #endregion
+
+        #region Get Orgas by User
+        /// <summary>
+        /// Obtiene un listado de Orgas a partir del Id (GUID) del usuario.
+        /// </summary>
+        /// <remarks>
+        /// Ejemplo: GET /Id/orgas
+        /// Id: ECD0F9C4-32A2-48D5-832D-0230F4CB4A3F
+        /// </remarks>
+        /// <param name="Id">GUID</param>
+        /// <returns>Un único usuario</returns>
+        /// <response code="200">Retorna el listado de orgas</response>
+        /// <response code="400">Error en el proceso</response>     
+        /// <response code="404">Orgas no encontradas</response>  
+        [HttpGet("{Id}/orgas")]
+        [ProducesResponseType(typeof(List<OrgaUser>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(APIResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(APIResponse), StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetOrgasByIdAsync(string Id)
+        {
+            try
+            {
+                var orgasuser = await this._userService.GetOrgasByUserIdAsync(Guid.Parse(Id));
+                if (orgasuser == null)
+                {
+                    return NotFound(new APIResponse() { Code = 9, Message = "Organizaciones no encontradas" });
+                }
+                return Ok(orgasuser);
+            }
+            catch (Exception)
+            {
+                return BadRequest(new APIResponse() { Code = 9, Message = "Error en la solicitud" });
             }
         }
         #endregion

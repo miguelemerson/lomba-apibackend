@@ -80,6 +80,65 @@ namespace Lomba.API.Services
 
             return orgauser;
         }
+
+        public async Task<OrgaUser> AssociateOrgaUserAsync(OrgaUserInput orgaUserInput)
+        {
+            if (orgaUserInput == null)
+                throw new ArgumentNullException(nameof(orgaUserInput));
+
+            if (string.IsNullOrWhiteSpace(orgaUserInput.UserId))
+                throw new ArgumentNullException(nameof(orgaUserInput.UserId));
+
+            if (string.IsNullOrWhiteSpace(orgaUserInput.OrgaId))
+                throw new ArgumentNullException(nameof(orgaUserInput.OrgaId));
+
+            var orga = await _db.Set<Orga>().SingleOrDefaultAsync(x=>x.Id == Guid.Parse(orgaUserInput.OrgaId));
+            var user = await _db.Set<User>().SingleOrDefaultAsync(x => x.Id == Guid.Parse(orgaUserInput.UserId));
+            var roles = await _db.Set<Role>().Where(x => orgaUserInput.Roles.Contains(x.Name)).ToListAsync();
+
+            var orgauser = await _db.Set<OrgaUser>()
+                .Include(u=>u.User)
+                .Include(o=>o.Orga)
+                .Include(r=>r.Roles)
+                .SingleOrDefaultAsync(x => x.Orga.Id == orga.Id && x.User.Id == user.Id);
+
+            if (orgauser == null)
+            {
+                orgauser = new OrgaUser()
+                {
+                    Orga = orga,
+                    User = user,
+                    Roles = roles
+                };
+
+                await _db.AddAsync<OrgaUser>(orgauser);
+                await _db.SaveChangesAsync();
+            }
+            else
+            {
+                orgauser.UpdatedAt = DateTime.UtcNow;
+                foreach (var role in roles)
+                {
+                    if (!orgauser.Roles.Any(r => r.Name == role.Name))
+                        orgauser.Roles.Add(role);
+                }
+
+                var toDelete = new List<Role>();
+                foreach (var role in orgauser.Roles)
+                {
+                    if (!roles.Any(r => r.Name == role.Name))
+                        toDelete.Add(role);
+                }
+
+                foreach (var role in toDelete)
+                    orgauser.Roles.Remove(role);
+
+                _db.Update(orgauser);
+                await _db.SaveChangesAsync();
+            }
+
+            return orgauser;
+        }
     }
 
     public interface IOrgaService
@@ -89,6 +148,7 @@ namespace Lomba.API.Services
         Task<List<OrgaUser>> GetUsersByOrgaIdAsync(Guid Id);
         Task<Orga> SetEnableAsync(Guid Id, bool setToDisable = false);
         Task<List<OrgaUser>> RemoveUserAsync(Guid Id, Guid UserId);
-
+        Task<OrgaUser> SetUserEnableAsync(Guid Id, Guid userId, bool setToDisable = false);
+        Task<OrgaUser> AssociateOrgaUserAsync(OrgaUserInput orgaUserInput);
     }
 }

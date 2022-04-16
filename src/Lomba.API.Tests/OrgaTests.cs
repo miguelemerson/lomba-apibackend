@@ -4,6 +4,7 @@ using Lomba.API.Services;
 using Microsoft.Extensions.Configuration;
 using System.IO;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 
 namespace Lomba.API.Tests
 {
@@ -40,14 +41,14 @@ namespace Lomba.API.Tests
 
         [Theory]
         [InlineData(Orgas.Org_Id_Without, 1, 1)]
-        [InlineData(Orgas.Org_Id_Lomba, 4, 5)]
+        [InlineData(Orgas.Org_Id_Lomba, 4, 6)]
         public async void GetUsersByOrga(string Id, int low, int high)
         {
             var users = await _orgaService.GetUsersByOrgaIdAsync(System.Guid.Parse(Id));
             Assert.NotNull(users);
 
             Assert.False(users.Exists(u => u.User == null), "Usuario nulo");
-            Assert.False(users.Exists(r => r.Roles == null || r.Roles.Count < 1), "Roles nulo");
+            Assert.False(users.Exists(r => r.Roles == null), "Roles nulo");
             Assert.False(users.Exists(o => o.Orga == null), "Orga nulo");
 
             Assert.InRange<int>(users.Count, low, high);
@@ -115,12 +116,42 @@ namespace Lomba.API.Tests
             Assert.False(userList.Exists(x=> x.User.Id.Equals(System.Guid.Parse(userId))));
 
             Assert.False(userList.Exists(u => u.User == null), "Usuario nulo");
-            Assert.False(userList.Exists(r => r.Roles == null || r.Roles.Count < 1), "Roles nulo");
+            Assert.False(userList.Exists(r => r.Roles == null), "Roles nulo");
             Assert.False(userList.Exists(o => o.Orga == null), "Orga nulo");
 
             userList = await _orgaService.GetUsersByOrgaIdAsync(System.Guid.Parse(Id));
             Assert.NotNull(userList);
             Assert.False(userList.Exists(x => x.User.Id.Equals(System.Guid.Parse(userId))));
+        }
+
+        [Theory]
+        [InlineData(Orgas.Org_Id_Lomba, Users.User_Id_SuperAdmin, Roles.Role_Name_Basic)]
+        [InlineData(Orgas.Org_Id_Lomba, Users.User_Id_User1, Roles.Role_Name_Admin)]
+        [InlineData(Orgas.Org_Id_Without, Users.User_Id_SuperAdmin, Roles.Role_Name_Basic)]
+        [InlineData(Orgas.Org_Id_Lomba, Users.User_Id_System, "")]
+        public async void AssociateOrgaUserAsync(string Id, string userId, string roleName)
+        {
+            var ouInput = new ViewModels.OrgaUserInput()
+            {
+                OrgaId = Id,
+                UserId = userId,
+                Roles = new List<string>() { roleName }
+            };
+
+            var orgauser = await _orgaService.AssociateOrgaUserAsync(ouInput);
+            Assert.NotNull(orgauser);
+
+            var nou = await _orgaService.GetUsersByOrgaIdAsync(System.Guid.Parse(Id));
+            Assert.NotNull(nou);
+
+            if(roleName != "")
+                Assert.True(nou.Exists(x => x.User.Id == System.Guid.Parse(userId) &&
+                    x.Orga.Id == System.Guid.Parse(Id) &&
+                    x.Roles.Exists(r=>r.Name == roleName)));
+            else
+                Assert.True(nou.Exists(x => x.User.Id == System.Guid.Parse(userId) &&
+                    x.Orga.Id == System.Guid.Parse(Id) &&
+                    x.Roles.Count == 0));
         }
     }
 }

@@ -119,7 +119,7 @@ namespace Lomba.API.Tests
         }
 
         [Theory]
-        [InlineData(Users.User_Id_SuperAdmin, 1, 1)]
+        [InlineData(Users.User_Id_SuperAdmin, 1, 2)]
         [InlineData(Users.User_Id_Admin, 1, 1)]
         [InlineData(Users.User_Id_System, 1, 1)]
         [InlineData(Users.User_Id_User1, 1, 1)]
