@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 
@@ -6,6 +7,7 @@ namespace Lomba.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class PingController : ControllerBase
     {
         private readonly IEnumerable<EndpointDataSource> _endpointSources;
@@ -15,6 +17,7 @@ namespace Lomba.API.Controllers
         }
 
         [HttpGet()]
+        [AllowAnonymous]
         [ProducesResponseType(typeof(DateTime), StatusCodes.Status200OK)]
         public ActionResult GetOk()
         {

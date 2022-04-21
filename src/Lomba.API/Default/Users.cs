@@ -32,12 +32,12 @@ namespace Lomba.API.Default
         public const string User_Name_User2 = "Usuario Dos";
         public const string User_Name_User3 = "Usuario Tres";
 
-        public const string User_Id_Admin = "00507BEE-2430-49B5-8AA7-9C4294BFF60A";
-        public const string User_Id_SuperAdmin = "AE0ED6AE-FDBB-442D-B2E4-32A23AFF8ECA";
-        public const string User_Id_System = "46DB2C12-E93A-4B97-9417-46B39EA7B336";
-        public const string User_Id_User1 = "ECD0F9C4-32A2-48D5-832D-0230F4CB4A3F";
-        public const string User_Id_User2 = "EAE35BE4-94CF-4078-918F-1A1C7068F5E1";
-        public const string User_Id_User3 = "37A41D2B-6DB3-4E50-A89F-42F4E4234A02";
+        public const string User_Id_Admin = "00000002-0000-0000-0000-00000000000A";
+        public const string User_Id_SuperAdmin = "00000001-0000-0000-0000-00000000000A";
+        public const string User_Id_System = "00000003-0000-0000-0000-00000000000B";
+        public const string User_Id_User1 = "01000003-0000-0000-0000-00000000000B";
+        public const string User_Id_User2 = "02000003-0000-0000-0000-00000000000B";
+        public const string User_Id_User3 = "03000003-0000-0000-0000-00000000000B";
 
         public static Models.User Admin()
         {

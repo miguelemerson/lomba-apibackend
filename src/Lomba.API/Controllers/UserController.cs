@@ -67,6 +67,7 @@ namespace Lomba.API.Controllers
         [ProducesResponseType(typeof(List<User>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(APIResponse), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(APIResponse), StatusCodes.Status404NotFound)]
+        [Authorize(Roles = Default.Roles.Role_AdminANDSuperAdmin)]
         public async Task<IActionResult> GetAsync()
         {
             try

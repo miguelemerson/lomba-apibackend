@@ -10,5 +10,7 @@
         public const string Role_Description_Admin = "Rol Administrador de la organización";
         public const string Role_Description_Basic = "Rol Básico de usuario convencional";
 
+        public const string Role_BasicANDAdmin = "basic,admin";
+        public const string Role_AdminANDSuperAdmin = "admin,superadmin";
     }
 }

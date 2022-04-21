@@ -36,7 +36,8 @@ namespace Lomba.API.Services
                 var user = await _db.Set<User>().AsNoTracking()
                     .SingleOrDefaultAsync(x => (
                         x.Username == loginRequest.Username ||
-                        x.Email == loginRequest.Username));
+                        x.Email == loginRequest.Username) &&
+                        x.IsDisabled == false);
 
                 if (user == null)
                 {
@@ -58,28 +59,34 @@ namespace Lomba.API.Services
                     .Include(u => u.User)
                     .Include(o => o.Orga)
                     .Include(r => r.Roles)
-                    .Where(x => x.User.Id == user.Id).ToListAsync();
+                    .Where(x => x.User.Id == user.Id &&
+                        x.IsDisabled == false).ToListAsync();
 
-                if (orgaUsers == null)
+                if (orgaUsers == null || orgaUsers.Count < 1)
                 {
                     throw new Exception("Usuario no existe, no es válido o contraseña es incorrecta");
                 }
 
                 var roles = new List<string>();
 
-                if(orgaUsers.Count > 1 &&
+                if (orgaUsers.Count > 1 &&
                     string.IsNullOrWhiteSpace(loginRequest.OrgaId))
+                {
+                    throw new Exception("Usuario no existe, no es válido o contraseña es incorrecta");
+                }
 
                 if (orgaUsers.Any(x => x.Orga.Id == orgaId))
                 {
-                    roles = orgaUsers.SingleOrDefault(x => x.Orga.Id == orgaId)
+                    roles = orgaUsers.SingleOrDefault(x => x.Orga.Id == orgaId &&
+                                x.IsDisabled == false)
                         .Roles.Select(r => r.Name).ToList();
                 }
                 else if (orgaUsers.Any(x => x.Orga.Id == Guid.Parse(Default.Orgas.Org_Id_Without)) &&
                     string.IsNullOrWhiteSpace(loginRequest.OrgaId))
                 {
                     roles = orgaUsers
-                        .SingleOrDefault(x => x.Orga.Id == Guid.Parse(Default.Orgas.Org_Id_Without))
+                        .SingleOrDefault(x => x.Orga.Id == Guid.Parse(Default.Orgas.Org_Id_Without) &&
+                                x.IsDisabled == false)
                         .Roles.Select(r => r.Name).ToList();
 
                     orgaId = Guid.Parse(Default.Orgas.Org_Id_Without);

@@ -3,12 +3,14 @@ using Microsoft.AspNetCore.Mvc;
 using Lomba.API.Services;
 using Lomba.API.Models;
 using Lomba.API.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Lomba.API.Controllers
 {
     [Route("api/v1/[controller]")]
     [Produces("application/json")]
     [ApiController]
+    [Authorize]
     public class OrgaController : ControllerBase
     {
         private readonly IOrgaService _orgaService;
@@ -100,6 +102,7 @@ namespace Lomba.API.Controllers
         [ProducesResponseType(typeof(Orga), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(APIResponse), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(APIResponse), StatusCodes.Status404NotFound)]
+        [Authorize(Roles = Default.Roles.Role_Name_SuperAdmin)]
         public async Task<IActionResult> EnableByIdAsync(string Id)
         {
             try
@@ -135,6 +138,7 @@ namespace Lomba.API.Controllers
         [ProducesResponseType(typeof(Orga), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(APIResponse), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(APIResponse), StatusCodes.Status404NotFound)]
+        [Authorize(Roles = Default.Roles.Role_Name_SuperAdmin)]
         public async Task<IActionResult> DisableByIdAsync(string Id)
         {
             try
@@ -170,7 +174,8 @@ namespace Lomba.API.Controllers
         [ProducesResponseType(typeof(List<OrgaUser>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(APIResponse), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(APIResponse), StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetOrgasByIdAsync(string Id)
+        [Authorize(Roles = Default.Roles.Role_AdminANDSuperAdmin)]
+        public async Task<IActionResult> GetUsersByIdAsync(string Id)
         {
             try
             {
@@ -205,6 +210,7 @@ namespace Lomba.API.Controllers
         [ProducesResponseType(typeof(OrgaUser), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(APIResponse), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(APIResponse), StatusCodes.Status404NotFound)]
+        [Authorize(Roles = Default.Roles.Role_AdminANDSuperAdmin)]
         public async Task<IActionResult> EnableUserByIdAsync(string Id, string userId)
         {
             try
@@ -240,6 +246,7 @@ namespace Lomba.API.Controllers
         [ProducesResponseType(typeof(Orga), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(APIResponse), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(APIResponse), StatusCodes.Status404NotFound)]
+        [Authorize(Roles = Default.Roles.Role_AdminANDSuperAdmin)]
         public async Task<IActionResult> DisableUserByIdAsync(string Id, string userId)
         {
             try
@@ -258,7 +265,7 @@ namespace Lomba.API.Controllers
         }
         #endregion
 
-        #region Disable User Orga
+        #region Remove User Orga
         /// <summary>
         /// Deshabilita el user orga
         /// </summary>
@@ -275,6 +282,7 @@ namespace Lomba.API.Controllers
         [ProducesResponseType(typeof(List<OrgaUser>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(APIResponse), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(APIResponse), StatusCodes.Status404NotFound)]
+        [Authorize(Roles = Default.Roles.Role_AdminANDSuperAdmin)]
         public async Task<IActionResult> RemoveUserAsync(string Id, string userId)
         {
             try
@@ -310,6 +318,7 @@ namespace Lomba.API.Controllers
         [ProducesResponseType(typeof(OrgaUser), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(APIResponse), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(APIResponse), StatusCodes.Status404NotFound)]
+        [Authorize(Roles = Default.Roles.Role_AdminANDSuperAdmin)]
         public async Task<IActionResult> AssociateUserAsync([FromBody] OrgaUserInput orgaUserInput)
         {
             try

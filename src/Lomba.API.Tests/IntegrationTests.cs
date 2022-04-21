@@ -22,47 +22,47 @@ namespace Lomba.API.Tests
         }
 
         [Theory]
-        [InlineData(Default.Users.Username_SuperAdmin, Default.Users.User_Password_SuperAdmin, "/api/v1/User", 200)]
-        [InlineData(Default.Users.Username_Admin, Default.Users.User_Password_Admin, "/api/v1/User", 200)]
-        [InlineData(Default.Users.Username_System, Default.Users.User_Password_System, "/api/v1/User", 200)]
-        [InlineData(Default.Users.Username_User3, Default.Users.User_Password_User3, "/api/v1/User", 200)]
-        [InlineData(Default.Users.Username_SuperAdmin, Default.Users.User_Password_SuperAdmin, $"/api/v1/User/{Default.Users.User_Id_User1}", 200)]
-        [InlineData(Default.Users.Username_Admin, Default.Users.User_Password_Admin, $"/api/v1/User/{Default.Users.User_Id_User1}", 200)]
-        [InlineData(Default.Users.Username_System, Default.Users.User_Password_System, $"/api/v1/User/{Default.Users.User_Id_User1}", 200)]
-        [InlineData(Default.Users.Username_User3, Default.Users.User_Password_User3, $"/api/v1/User/{Default.Users.User_Id_User1}", 200)]
-        [InlineData(Default.Users.Username_SuperAdmin, Default.Users.User_Password_SuperAdmin, $"/api/v1/User/{Default.Users.User_Id_User1}/orgas", 200)]
-        [InlineData(Default.Users.Username_Admin, Default.Users.User_Password_Admin, $"/api/v1/User/{Default.Users.User_Id_User1}/orgas", 200)]
-        [InlineData(Default.Users.Username_System, Default.Users.User_Password_System, $"/api/v1/User/{Default.Users.User_Id_User1}/orgas", 200)]
-        [InlineData(Default.Users.Username_User3, Default.Users.User_Password_User3, $"/api/v1/User/{Default.Users.User_Id_User1}/orgas", 200)]
-        [InlineData(Default.Users.Username_SuperAdmin, Default.Users.User_Password_SuperAdmin, "/api/v1/Role", 200)]
-        [InlineData(Default.Users.Username_Admin, Default.Users.User_Password_Admin, "/api/v1/Role", 200)]
-        [InlineData(Default.Users.Username_System, Default.Users.User_Password_System, "/api/v1/Role", 200)]
-        [InlineData(Default.Users.Username_User3, Default.Users.User_Password_User3, "/api/v1/Role", 200)]
-        [InlineData(Default.Users.Username_SuperAdmin, Default.Users.User_Password_SuperAdmin, $"/api/v1/Role/{Default.Roles.Role_Name_Basic}", 200)]
-        [InlineData(Default.Users.Username_Admin, Default.Users.User_Password_Admin, $"/api/v1/Role/{Default.Roles.Role_Name_Basic}", 200)]
-        [InlineData(Default.Users.Username_System, Default.Users.User_Password_System, $"/api/v1/Role/{Default.Roles.Role_Name_Basic}", 200)]
-        [InlineData(Default.Users.Username_User3, Default.Users.User_Password_User3, $"/api/v1/Role/{Default.Roles.Role_Name_Basic}", 200)]
-        [InlineData(Default.Users.Username_SuperAdmin, Default.Users.User_Password_SuperAdmin, "/api/Ping", 200)]
-        [InlineData(Default.Users.Username_Admin, Default.Users.User_Password_Admin, "/api/Ping", 200)]
-        [InlineData(Default.Users.Username_System, Default.Users.User_Password_System, "/api/Ping", 200)]
-        [InlineData(Default.Users.Username_User3, Default.Users.User_Password_User3, "/api/Ping", 200)]
-        [InlineData(Default.Users.Username_SuperAdmin, Default.Users.User_Password_SuperAdmin, "/api/Ping/endpoints", 200)]
-        [InlineData(Default.Users.Username_Admin, Default.Users.User_Password_Admin, "/api/Ping/endpoints", 200)]
-        [InlineData(Default.Users.Username_System, Default.Users.User_Password_System, "/api/Ping/endpoints", 200)]
-        [InlineData(Default.Users.Username_User3, Default.Users.User_Password_User3, "/api/Ping/endpoints", 200)]
-        [InlineData(Default.Users.Username_SuperAdmin, Default.Users.User_Password_SuperAdmin, "/api/v1/Orga", 200)]
-        [InlineData(Default.Users.Username_Admin, Default.Users.User_Password_Admin, "/api/v1/Orga", 200)]
-        [InlineData(Default.Users.Username_System, Default.Users.User_Password_System, "/api/v1/Orga", 200)]
-        [InlineData(Default.Users.Username_User3, Default.Users.User_Password_User3, "/api/v1/Orga", 200)]
-        [InlineData(Default.Users.Username_SuperAdmin, Default.Users.User_Password_SuperAdmin, $"/api/v1/Orga/{Default.Orgas.Org_Id_Lomba}", 200)]
-        [InlineData(Default.Users.Username_Admin, Default.Users.User_Password_Admin, $"/api/v1/Orga/{Default.Orgas.Org_Id_Lomba}", 200)]
-        [InlineData(Default.Users.Username_System, Default.Users.User_Password_System, $"/api/v1/Orga/{Default.Orgas.Org_Id_Lomba}", 200)]
-        [InlineData(Default.Users.Username_User3, Default.Users.User_Password_User3, $"/api/v1/Orga/{Default.Orgas.Org_Id_Lomba}", 200)]
-        [InlineData(Default.Users.Username_SuperAdmin, Default.Users.User_Password_SuperAdmin, $"/api/v1/Orga/{Default.Orgas.Org_Id_Lomba}/users", 200)]
-        [InlineData(Default.Users.Username_Admin, Default.Users.User_Password_Admin, $"/api/v1/Orga/{Default.Orgas.Org_Id_Lomba}/users", 200)]
-        [InlineData(Default.Users.Username_System, Default.Users.User_Password_System, $"/api/v1/Orga/{Default.Orgas.Org_Id_Lomba}/users", 200)]
-        [InlineData(Default.Users.Username_User3, Default.Users.User_Password_User3, $"/api/v1/Orga/{Default.Orgas.Org_Id_Lomba}/users", 200)]
-        public async Task Get_ReturnSuccess(string userName, string userPassword, string url, int statusCode)
+        [InlineData(Default.Users.Username_SuperAdmin, Default.Users.User_Password_SuperAdmin, "/api/v1/User", true)]
+        [InlineData(Default.Users.Username_Admin, Default.Users.User_Password_Admin, "/api/v1/User", true)]
+        [InlineData(Default.Users.Username_System, Default.Users.User_Password_System, "/api/v1/User", false)]
+        [InlineData(Default.Users.Username_User3, Default.Users.User_Password_User3, "/api/v1/User", false)]
+        [InlineData(Default.Users.Username_SuperAdmin, Default.Users.User_Password_SuperAdmin, $"/api/v1/User/{Default.Users.User_Id_User1}", true)]
+        [InlineData(Default.Users.Username_Admin, Default.Users.User_Password_Admin, $"/api/v1/User/{Default.Users.User_Id_User1}", true)]
+        [InlineData(Default.Users.Username_System, Default.Users.User_Password_System, $"/api/v1/User/{Default.Users.User_Id_User1}", true)]
+        [InlineData(Default.Users.Username_User3, Default.Users.User_Password_User3, $"/api/v1/User/{Default.Users.User_Id_User1}", true)]
+        [InlineData(Default.Users.Username_SuperAdmin, Default.Users.User_Password_SuperAdmin, $"/api/v1/User/{Default.Users.User_Id_User1}/orgas", true)]
+        [InlineData(Default.Users.Username_Admin, Default.Users.User_Password_Admin, $"/api/v1/User/{Default.Users.User_Id_User1}/orgas", true)]
+        [InlineData(Default.Users.Username_System, Default.Users.User_Password_System, $"/api/v1/User/{Default.Users.User_Id_User1}/orgas", true)]
+        [InlineData(Default.Users.Username_User3, Default.Users.User_Password_User3, $"/api/v1/User/{Default.Users.User_Id_User1}/orgas", true)]
+        [InlineData(Default.Users.Username_SuperAdmin, Default.Users.User_Password_SuperAdmin, "/api/v1/Role", true)]
+        [InlineData(Default.Users.Username_Admin, Default.Users.User_Password_Admin, "/api/v1/Role", true)]
+        [InlineData(Default.Users.Username_System, Default.Users.User_Password_System, "/api/v1/Role", true)]
+        [InlineData(Default.Users.Username_User3, Default.Users.User_Password_User3, "/api/v1/Role", true)]
+        [InlineData(Default.Users.Username_SuperAdmin, Default.Users.User_Password_SuperAdmin, $"/api/v1/Role/{Default.Roles.Role_Name_Basic}", true)]
+        [InlineData(Default.Users.Username_Admin, Default.Users.User_Password_Admin, $"/api/v1/Role/{Default.Roles.Role_Name_Basic}", true)]
+        [InlineData(Default.Users.Username_System, Default.Users.User_Password_System, $"/api/v1/Role/{Default.Roles.Role_Name_Basic}", true)]
+        [InlineData(Default.Users.Username_User3, Default.Users.User_Password_User3, $"/api/v1/Role/{Default.Roles.Role_Name_Basic}", true)]
+        [InlineData(Default.Users.Username_SuperAdmin, Default.Users.User_Password_SuperAdmin, "/api/Ping", true)]
+        [InlineData(Default.Users.Username_Admin, Default.Users.User_Password_Admin, "/api/Ping", true)]
+        [InlineData(Default.Users.Username_System, Default.Users.User_Password_System, "/api/Ping", true)]
+        [InlineData(Default.Users.Username_User3, Default.Users.User_Password_User3, "/api/Ping", true)]
+        [InlineData(Default.Users.Username_SuperAdmin, Default.Users.User_Password_SuperAdmin, "/api/Ping/endpoints", true)]
+        [InlineData(Default.Users.Username_Admin, Default.Users.User_Password_Admin, "/api/Ping/endpoints", true)]
+        [InlineData(Default.Users.Username_System, Default.Users.User_Password_System, "/api/Ping/endpoints", true)]
+        [InlineData(Default.Users.Username_User3, Default.Users.User_Password_User3, "/api/Ping/endpoints", true)]
+        [InlineData(Default.Users.Username_SuperAdmin, Default.Users.User_Password_SuperAdmin, "/api/v1/Orga", true)]
+        [InlineData(Default.Users.Username_Admin, Default.Users.User_Password_Admin, "/api/v1/Orga", true)]
+        [InlineData(Default.Users.Username_System, Default.Users.User_Password_System, "/api/v1/Orga", true)]
+        [InlineData(Default.Users.Username_User3, Default.Users.User_Password_User3, "/api/v1/Orga", true)]
+        [InlineData(Default.Users.Username_SuperAdmin, Default.Users.User_Password_SuperAdmin, $"/api/v1/Orga/{Default.Orgas.Org_Id_Lomba}", true)]
+        [InlineData(Default.Users.Username_Admin, Default.Users.User_Password_Admin, $"/api/v1/Orga/{Default.Orgas.Org_Id_Lomba}", true)]
+        [InlineData(Default.Users.Username_System, Default.Users.User_Password_System, $"/api/v1/Orga/{Default.Orgas.Org_Id_Lomba}", true)]
+        [InlineData(Default.Users.Username_User3, Default.Users.User_Password_User3, $"/api/v1/Orga/{Default.Orgas.Org_Id_Lomba}", true)]
+        [InlineData(Default.Users.Username_SuperAdmin, Default.Users.User_Password_SuperAdmin, $"/api/v1/Orga/{Default.Orgas.Org_Id_Lomba}/users", true)]
+        [InlineData(Default.Users.Username_Admin, Default.Users.User_Password_Admin, $"/api/v1/Orga/{Default.Orgas.Org_Id_Lomba}/users", true)]
+        [InlineData(Default.Users.Username_System, Default.Users.User_Password_System, $"/api/v1/Orga/{Default.Orgas.Org_Id_Lomba}/users", false)]
+        [InlineData(Default.Users.Username_User3, Default.Users.User_Password_User3, $"/api/v1/Orga/{Default.Orgas.Org_Id_Lomba}/users", false)]
+        public async Task Get_ReturnSuccess(string userName, string userPassword, string url, bool statusOk)
         {
             var client = _factory.CreateClient();
 
@@ -70,11 +70,8 @@ namespace Lomba.API.Tests
             client.DefaultRequestHeaders.Add("Authorization", "Bearer " + userLogged.Token);
 
             var response = await client.GetAsync(url);
-            Assert.True(response.IsSuccessStatusCode);
+            Assert.Equal(statusOk, response.IsSuccessStatusCode);
 
-            // Assert
-            response.EnsureSuccessStatusCode(); // Status Code 200-299
-            Assert.True(response.IsSuccessStatusCode);
         }
 
         public async Task<ViewModels.UserLogged> TestLoginUserAsync(HttpClient client, string userName, string passWord)

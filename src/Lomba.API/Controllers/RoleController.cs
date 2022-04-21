@@ -3,12 +3,14 @@ using Microsoft.AspNetCore.Mvc;
 using Lomba.API.Services;
 using Lomba.API.Models;
 using Lomba.API.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Lomba.API.Controllers
 {
     [Route("api/v1/[controller]")]
     [Produces("application/json")]
     [ApiController]
+    [Authorize]
     public class RoleController : ControllerBase
     {
         private readonly IRoleService _roleService;
@@ -100,6 +102,7 @@ namespace Lomba.API.Controllers
         [ProducesResponseType(typeof(Role), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(APIResponse), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(APIResponse), StatusCodes.Status404NotFound)]
+        [Authorize(Roles = Default.Roles.Role_Name_SuperAdmin)]
         public async Task<IActionResult> EnableByIdAsync(string name)
         {
             try
@@ -135,6 +138,7 @@ namespace Lomba.API.Controllers
         [ProducesResponseType(typeof(Role), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(APIResponse), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(APIResponse), StatusCodes.Status404NotFound)]
+        [Authorize(Roles = Default.Roles.Role_Name_SuperAdmin)]
         public async Task<IActionResult> DisableByIdAsync(string name)
         {
             try
