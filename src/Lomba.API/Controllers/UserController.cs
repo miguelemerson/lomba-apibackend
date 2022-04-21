@@ -3,12 +3,14 @@ using Microsoft.AspNetCore.Mvc;
 using Lomba.API.Services;
 using Lomba.API.Models;
 using Lomba.API.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Lomba.API.Controllers
 {
     [Route("api/v1/[controller]")]
     [Produces("application/json")]
     [ApiController]
+    [Authorize]
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
@@ -95,6 +97,7 @@ namespace Lomba.API.Controllers
         [ProducesResponseType(typeof(UserLogged), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(APIResponse), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(APIResponse), StatusCodes.Status404NotFound)]
+        [AllowAnonymous]
         public async Task<IActionResult> GetAuthenticateAsync(UserAuth userAuth)
         {
             try

@@ -14,5 +14,12 @@ namespace Lomba.API.ViewModels
         [Required]
         [Display(Name = "Token")]
         public string? Token { get; set; }
+
+        /// <summary>
+        /// Id de Organización.
+        /// </summary>
+        [Required]
+        [Display(Name = "Identificador Organización")]
+        public string OrgaId { get; set; }
     }
 }

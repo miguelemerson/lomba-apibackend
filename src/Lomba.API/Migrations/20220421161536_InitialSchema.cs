@@ -113,6 +113,26 @@ namespace Lomba.API.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_Orgas_Expires",
+                table: "Orgas",
+                column: "Expires");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Orgas_IsDisabled",
+                table: "Orgas",
+                column: "IsDisabled");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OrgasUsers_Expires",
+                table: "OrgasUsers",
+                column: "Expires");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OrgasUsers_IsDisabled",
+                table: "OrgasUsers",
+                column: "IsDisabled");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_OrgasUsers_OrgaId",
                 table: "OrgasUsers",
                 column: "OrgaId");
@@ -126,6 +146,31 @@ namespace Lomba.API.Migrations
                 name: "IX_OrgaUserRole_RolesName",
                 table: "OrgaUserRole",
                 column: "RolesName");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Roles_IsDisabled",
+                table: "Roles",
+                column: "IsDisabled");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_Email",
+                table: "Users",
+                column: "Email");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_Expires",
+                table: "Users",
+                column: "Expires");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_IsDisabled",
+                table: "Users",
+                column: "IsDisabled");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_Username",
+                table: "Users",
+                column: "Username");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

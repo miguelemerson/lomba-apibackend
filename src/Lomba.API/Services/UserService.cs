@@ -49,11 +49,52 @@ namespace Lomba.API.Services
                     throw new Exception("Usuario no existe, no es válido o contraseña es incorrecta");
                 }
 
-                var token = this.GenerateJwtToken(user, DateTime.UtcNow.AddDays(7));
+                Guid orgaId = Guid.Parse(Default.Orgas.Org_Id_Lomba); //predeterminado.
+
+                if (!string.IsNullOrWhiteSpace(loginRequest.OrgaId))
+                    orgaId = Guid.Parse(loginRequest.OrgaId);
+
+                var orgaUsers = await _db.Set<OrgaUser>().AsNoTracking()
+                    .Include(u => u.User)
+                    .Include(o => o.Orga)
+                    .Include(r => r.Roles)
+                    .Where(x => x.User.Id == user.Id).ToListAsync();
+
+                if (orgaUsers == null)
+                {
+                    throw new Exception("Usuario no existe, no es válido o contraseña es incorrecta");
+                }
+
+                var roles = new List<string>();
+
+                if(orgaUsers.Count > 1 &&
+                    string.IsNullOrWhiteSpace(loginRequest.OrgaId))
+
+                if (orgaUsers.Any(x => x.Orga.Id == orgaId))
+                {
+                    roles = orgaUsers.SingleOrDefault(x => x.Orga.Id == orgaId)
+                        .Roles.Select(r => r.Name).ToList();
+                }
+                else if (orgaUsers.Any(x => x.Orga.Id == Guid.Parse(Default.Orgas.Org_Id_Without)) &&
+                    string.IsNullOrWhiteSpace(loginRequest.OrgaId))
+                {
+                    roles = orgaUsers
+                        .SingleOrDefault(x => x.Orga.Id == Guid.Parse(Default.Orgas.Org_Id_Without))
+                        .Roles.Select(r => r.Name).ToList();
+
+                    orgaId = Guid.Parse(Default.Orgas.Org_Id_Without);
+                }
+                else
+                {
+                    throw new Exception("Usuario no existe, no es válido o contraseña es incorrecta");
+                }
+
+                var token = this.GenerateJwtToken(user, DateTime.UtcNow.AddDays(7), roles);
 
                 UserLogged userLogged = new UserLogged();
                 userLogged.Token = token;
                 userLogged.Username = user.Username;
+                userLogged.OrgaId = orgaId.ToString();
 
                 return userLogged;
             }
@@ -95,6 +136,17 @@ namespace Lomba.API.Services
                 .Where(o => o.User.Id == Id).ToListAsync();
         }
 
+        public async Task<List<Role>> GetRolesByUserOrgaAsync(Guid Id, Guid orgaId)
+        {
+            var orgauser = await _db.Set<OrgaUser>().AsNoTracking()
+                .Include(u => u.User)
+                .Include(r => r.Roles)
+                .Include(g => g.Orga)
+                .SingleOrDefaultAsync(o => o.User.Id == Id && o.Orga.Id == orgaId);
+
+            return orgauser?.Roles ?? null;
+        }
+
         public static bool VerifyPasswordHash(string password, byte[] storedHash, byte[] storedSalt)
         {
             if (string.IsNullOrWhiteSpace(password)) throw new ArgumentNullException(nameof(password));
@@ -113,7 +165,7 @@ namespace Lomba.API.Services
             }
             return true;
         }
-        private string GenerateJwtToken(User user, DateTime expires)
+        private string GenerateJwtToken(User user, DateTime expires, List<string> roles = null)
         {
             // generate token that is valid for 7 days
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -122,6 +174,12 @@ namespace Lomba.API.Services
             var claims = new ClaimsIdentity();
             claims.AddClaim(new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()));
             claims.AddClaim(new Claim(ClaimTypes.Name, user.Username.ToString()));
+
+            if (roles != null)
+            {
+                foreach (string role in roles)
+                    claims.AddClaim(new Claim(ClaimTypes.Role, role));
+            }
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
@@ -168,5 +226,7 @@ namespace Lomba.API.Services
         void DeleteUserAsync(Guid Id);
         Task<User> SetEnableAsync(Guid Id, bool enable = true);
         Task<List<OrgaUser>> GetOrgasByUserIdAsync(Guid Id);
+
+        Task<List<Role>> GetRolesByUserOrgaAsync(Guid Id, Guid orgaId);
     }
 }

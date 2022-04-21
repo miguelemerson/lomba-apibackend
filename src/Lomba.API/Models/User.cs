@@ -1,9 +1,12 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace Lomba.API.Models
 {
+    [Index(nameof(Username))]
+    [Index(nameof(Email))]
     public class User : Base
     {
         [Key]

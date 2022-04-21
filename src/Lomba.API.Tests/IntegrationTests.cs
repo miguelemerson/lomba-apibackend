@@ -1,0 +1,110 @@
+﻿using Microsoft.AspNetCore.Mvc.Testing;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Xunit;
+using Lomba.API;
+using System.Net.Http;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using Newtonsoft.Json;
+
+namespace Lomba.API.Tests
+{
+    public class IntegrationTests : IClassFixture<CustomWebApplicationFactory<Startup>>
+    {
+        private readonly CustomWebApplicationFactory<Startup> _factory;
+        public IntegrationTests(CustomWebApplicationFactory<Startup> factory)
+        {
+            _factory = factory;
+        }
+
+        [Theory]
+        [InlineData(Default.Users.Username_SuperAdmin, Default.Users.User_Password_SuperAdmin, "/api/v1/User", 200)]
+        [InlineData(Default.Users.Username_Admin, Default.Users.User_Password_Admin, "/api/v1/User", 200)]
+        [InlineData(Default.Users.Username_System, Default.Users.User_Password_System, "/api/v1/User", 200)]
+        [InlineData(Default.Users.Username_User3, Default.Users.User_Password_User3, "/api/v1/User", 200)]
+        [InlineData(Default.Users.Username_SuperAdmin, Default.Users.User_Password_SuperAdmin, $"/api/v1/User/{Default.Users.User_Id_User1}", 200)]
+        [InlineData(Default.Users.Username_Admin, Default.Users.User_Password_Admin, $"/api/v1/User/{Default.Users.User_Id_User1}", 200)]
+        [InlineData(Default.Users.Username_System, Default.Users.User_Password_System, $"/api/v1/User/{Default.Users.User_Id_User1}", 200)]
+        [InlineData(Default.Users.Username_User3, Default.Users.User_Password_User3, $"/api/v1/User/{Default.Users.User_Id_User1}", 200)]
+        [InlineData(Default.Users.Username_SuperAdmin, Default.Users.User_Password_SuperAdmin, $"/api/v1/User/{Default.Users.User_Id_User1}/orgas", 200)]
+        [InlineData(Default.Users.Username_Admin, Default.Users.User_Password_Admin, $"/api/v1/User/{Default.Users.User_Id_User1}/orgas", 200)]
+        [InlineData(Default.Users.Username_System, Default.Users.User_Password_System, $"/api/v1/User/{Default.Users.User_Id_User1}/orgas", 200)]
+        [InlineData(Default.Users.Username_User3, Default.Users.User_Password_User3, $"/api/v1/User/{Default.Users.User_Id_User1}/orgas", 200)]
+        [InlineData(Default.Users.Username_SuperAdmin, Default.Users.User_Password_SuperAdmin, "/api/v1/Role", 200)]
+        [InlineData(Default.Users.Username_Admin, Default.Users.User_Password_Admin, "/api/v1/Role", 200)]
+        [InlineData(Default.Users.Username_System, Default.Users.User_Password_System, "/api/v1/Role", 200)]
+        [InlineData(Default.Users.Username_User3, Default.Users.User_Password_User3, "/api/v1/Role", 200)]
+        [InlineData(Default.Users.Username_SuperAdmin, Default.Users.User_Password_SuperAdmin, $"/api/v1/Role/{Default.Roles.Role_Name_Basic}", 200)]
+        [InlineData(Default.Users.Username_Admin, Default.Users.User_Password_Admin, $"/api/v1/Role/{Default.Roles.Role_Name_Basic}", 200)]
+        [InlineData(Default.Users.Username_System, Default.Users.User_Password_System, $"/api/v1/Role/{Default.Roles.Role_Name_Basic}", 200)]
+        [InlineData(Default.Users.Username_User3, Default.Users.User_Password_User3, $"/api/v1/Role/{Default.Roles.Role_Name_Basic}", 200)]
+        [InlineData(Default.Users.Username_SuperAdmin, Default.Users.User_Password_SuperAdmin, "/api/Ping", 200)]
+        [InlineData(Default.Users.Username_Admin, Default.Users.User_Password_Admin, "/api/Ping", 200)]
+        [InlineData(Default.Users.Username_System, Default.Users.User_Password_System, "/api/Ping", 200)]
+        [InlineData(Default.Users.Username_User3, Default.Users.User_Password_User3, "/api/Ping", 200)]
+        [InlineData(Default.Users.Username_SuperAdmin, Default.Users.User_Password_SuperAdmin, "/api/Ping/endpoints", 200)]
+        [InlineData(Default.Users.Username_Admin, Default.Users.User_Password_Admin, "/api/Ping/endpoints", 200)]
+        [InlineData(Default.Users.Username_System, Default.Users.User_Password_System, "/api/Ping/endpoints", 200)]
+        [InlineData(Default.Users.Username_User3, Default.Users.User_Password_User3, "/api/Ping/endpoints", 200)]
+        [InlineData(Default.Users.Username_SuperAdmin, Default.Users.User_Password_SuperAdmin, "/api/v1/Orga", 200)]
+        [InlineData(Default.Users.Username_Admin, Default.Users.User_Password_Admin, "/api/v1/Orga", 200)]
+        [InlineData(Default.Users.Username_System, Default.Users.User_Password_System, "/api/v1/Orga", 200)]
+        [InlineData(Default.Users.Username_User3, Default.Users.User_Password_User3, "/api/v1/Orga", 200)]
+        [InlineData(Default.Users.Username_SuperAdmin, Default.Users.User_Password_SuperAdmin, $"/api/v1/Orga/{Default.Orgas.Org_Id_Lomba}", 200)]
+        [InlineData(Default.Users.Username_Admin, Default.Users.User_Password_Admin, $"/api/v1/Orga/{Default.Orgas.Org_Id_Lomba}", 200)]
+        [InlineData(Default.Users.Username_System, Default.Users.User_Password_System, $"/api/v1/Orga/{Default.Orgas.Org_Id_Lomba}", 200)]
+        [InlineData(Default.Users.Username_User3, Default.Users.User_Password_User3, $"/api/v1/Orga/{Default.Orgas.Org_Id_Lomba}", 200)]
+        [InlineData(Default.Users.Username_SuperAdmin, Default.Users.User_Password_SuperAdmin, $"/api/v1/Orga/{Default.Orgas.Org_Id_Lomba}/users", 200)]
+        [InlineData(Default.Users.Username_Admin, Default.Users.User_Password_Admin, $"/api/v1/Orga/{Default.Orgas.Org_Id_Lomba}/users", 200)]
+        [InlineData(Default.Users.Username_System, Default.Users.User_Password_System, $"/api/v1/Orga/{Default.Orgas.Org_Id_Lomba}/users", 200)]
+        [InlineData(Default.Users.Username_User3, Default.Users.User_Password_User3, $"/api/v1/Orga/{Default.Orgas.Org_Id_Lomba}/users", 200)]
+        public async Task Get_ReturnSuccess(string userName, string userPassword, string url, int statusCode)
+        {
+            var client = _factory.CreateClient();
+
+            var userLogged = await TestLoginUserAsync(client, userName, userPassword);
+            client.DefaultRequestHeaders.Add("Authorization", "Bearer " + userLogged.Token);
+
+            var response = await client.GetAsync(url);
+            Assert.True(response.IsSuccessStatusCode);
+
+            // Assert
+            response.EnsureSuccessStatusCode(); // Status Code 200-299
+            Assert.True(response.IsSuccessStatusCode);
+        }
+
+        public async Task<ViewModels.UserLogged> TestLoginUserAsync(HttpClient client, string userName, string passWord)
+        {
+            var auth = new ViewModels.UserAuth()
+            {
+                Username = userName,
+                Password = passWord
+            };
+
+            StringContent stringContent = null;
+            HttpResponseMessage resMsg = null;
+            stringContent = GetStringContent(auth);
+            resMsg = await client.PostAsync("/api/v1/User/authenticate", stringContent);
+            Assert.True(resMsg.IsSuccessStatusCode);
+
+            var userModel = JsonConvert
+                .DeserializeObject<ViewModels.UserLogged>(await resMsg.Content.ReadAsStringAsync());
+
+            Assert.NotNull(userModel);
+
+            return userModel;
+        }
+
+        private static StringContent GetStringContent(object obj)
+        {
+            return new StringContent(JsonConvert.SerializeObject(obj)
+                , System.Text.Encoding.UTF8
+                , "application/json");
+        }
+
+    }
+}

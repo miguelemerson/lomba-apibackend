@@ -47,6 +47,10 @@ namespace Lomba.API.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Expires");
+
+                    b.HasIndex("IsDisabled");
+
                     b.ToTable("Orgas");
                 });
 
@@ -76,6 +80,10 @@ namespace Lomba.API.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Expires");
+
+                    b.HasIndex("IsDisabled");
+
                     b.HasIndex("OrgaId");
 
                     b.HasIndex("UserId");
@@ -101,6 +109,8 @@ namespace Lomba.API.Migrations
                         .HasColumnType("datetime2");
 
                     b.HasKey("Name");
+
+                    b.HasIndex("IsDisabled");
 
                     b.ToTable("Roles");
                 });
@@ -145,6 +155,14 @@ namespace Lomba.API.Migrations
                         .HasColumnType("nvarchar(20)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Email");
+
+                    b.HasIndex("Expires");
+
+                    b.HasIndex("IsDisabled");
+
+                    b.HasIndex("Username");
 
                     b.ToTable("Users");
                 });

@@ -58,16 +58,19 @@ namespace Lomba.API.Tests
         }
 
         [Theory]
-        [InlineData(Users.Username_SuperAdmin, Users.User_Password_SuperAdmin, true)]
-        [InlineData(Users.Username_Admin, Users.User_Password_Admin, true)]
-        [InlineData(Users.Username_System, Users.User_Password_System, true)]
-        [InlineData(Users.Username_User1, Users.User_Password_User1, true)]
-        [InlineData(Users.Username_User2, Users.User_Password_User2, true)]
-        [InlineData(Users.Username_User3, Users.User_Password_User3, true)]
-        [InlineData("nouser", "nopass", false)]
-        public async void AuthenticateUsers(string userName, string userPassword, bool result)
+        [InlineData(Users.Username_SuperAdmin, Users.User_Password_SuperAdmin, null, true)]
+        [InlineData(Users.Username_SuperAdmin, Users.User_Password_SuperAdmin, Orgas.Org_Id_Without, true)]
+        [InlineData(Users.Username_SuperAdmin, Users.User_Password_SuperAdmin, Orgas.Org_Id_Lomba, false)]
+        [InlineData(Users.Username_Admin, Users.User_Password_Admin, null, true)]
+        [InlineData(Users.Username_System, Users.User_Password_System, null, true)]
+        [InlineData(Users.Username_User1, Users.User_Password_User1, null, true)]
+        [InlineData(Users.Username_User2, Users.User_Password_User2, null, true)]
+        [InlineData(Users.Username_User3, Users.User_Password_User3, null, true)]
+        [InlineData(Users.Username_User3, Users.User_Password_User3, Orgas.Org_Id_Without, false)]
+        [InlineData("nouser", "nopass", null, false)]
+        public async void AuthenticateUsers(string userName, string userPassword, string orgaId, bool result)
         {
-            var userAuth = new ViewModels.UserAuth() { Username = userName, Password = userPassword };
+            var userAuth = new ViewModels.UserAuth() { Username = userName, Password = userPassword, OrgaId = orgaId };
 
             ViewModels.UserLogged? session = null;
 
@@ -135,6 +138,21 @@ namespace Lomba.API.Tests
             Assert.False(orgas.Exists(o => o.Orga == null));
 
             Assert.InRange<int>(orgas.Count, low, high);
+        }
+
+        [Theory]
+        [InlineData(Users.User_Id_SuperAdmin, Orgas.Org_Id_Without, 1, 1)]
+        [InlineData(Users.User_Id_Admin, Orgas.Org_Id_Lomba, 1, 2)]
+        [InlineData(Users.User_Id_System, Orgas.Org_Id_Lomba, 1, 1)]
+        [InlineData(Users.User_Id_User1, Orgas.Org_Id_Lomba, 1, 1)]
+        [InlineData(Users.User_Id_User2, Orgas.Org_Id_Lomba, 1, 1)]
+        [InlineData(Users.User_Id_User3, Orgas.Org_Id_Lomba, 1, 1)]
+        public async void GetRolesByUserOrga(string Id, string orgaId, int low, int high)
+        {
+            var roles = await _userService.GetRolesByUserOrgaAsync(System.Guid.Parse(Id), System.Guid.Parse(orgaId));
+            Assert.NotNull(roles);
+
+            Assert.InRange<int>(roles.Count, low, high);
         }
 
     }

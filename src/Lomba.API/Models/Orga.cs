@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -14,6 +16,5 @@ namespace Lomba.API.Models
         [StringLength(200)]
         [Display(Name = "Nombre de la Organización")]
         public string? Name { get; set; }
-
     }
 }

@@ -23,5 +23,12 @@ namespace Lomba.API.ViewModels
         [Display(Name = "Contraseña")]
         [StringLength(200)]
         public string? Password { get; set; }
+
+        /// <summary>
+        /// Id de Organización.
+        /// </summary>
+        /// <example>user3</example>
+        [Display(Name = "Identificador Organización")]
+        public string? OrgaId { get; set; }
     }
 }
