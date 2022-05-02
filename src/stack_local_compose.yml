@@ -1,0 +1,42 @@
+version: '3.9'
+
+services:
+#base de datos
+  sqlserver_db:
+  # nombre del contenedor
+    container_name: sql2019dockervol
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    restart: always
+    networks:
+      - netapi    
+    ports:
+      - 14332:1433
+    # en windows los volumenes se separan en los primeros 3
+    # se incluye el 4to volumen de forma opcional
+    volumes:
+      - d:\docker_vols\sqlserver2019\data:/var/opt/mssql/data
+      - d:\docker_vols\sqlserver2019\log:/var/opt/mssql/log
+      - d:\docker_vols\sqlserver2019\secrets:/var/opt/mssql/secrets
+      - d:\docker_vols\sqlserver2019\tmp:/var/tmp
+    environment:
+      ACCEPT_EULA: Y
+      MSSQL_SA_PASSWORD: sa0000.AB@qwer.9
+
+  lombaapi:
+    build:
+      context: ./
+    restart: unless-stopped      
+    networks:
+      - netapi      
+    container_name: lombaapicomp
+    environment:
+      ASPNETCORE_ENVIRONMENT: Staging
+    depends_on:
+      - sqlserver_db  
+    ports:
+      - 8187:80
+
+networks:
+    netapi:
+        driver: bridge
+        name: netapi      
