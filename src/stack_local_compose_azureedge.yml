@@ -1,0 +1,35 @@
+version: '3.9'
+
+services:
+#base de datos
+  sqlserver_db:
+  # nombre del contenedor
+    container_name: azuresql
+    image: mcr.microsoft.com/azure-sql-edge:latest
+    restart: always
+    networks:
+      - netapi    
+    ports:
+      - 14332:1433
+    environment:
+      ACCEPT_EULA: Y
+      MSSQL_SA_PASSWORD: sa0000.AB@qwer.9
+
+  lombaapi:
+    build:
+      context: ./
+    restart: unless-stopped      
+    networks:
+      - netapi      
+    container_name: lombaapicomp
+    environment:
+      ASPNETCORE_ENVIRONMENT: Staging
+    depends_on:
+      - sqlserver_db  
+    ports:
+      - 8187:80
+
+networks:
+    netapi:
+        driver: bridge
+        name: netapi      
