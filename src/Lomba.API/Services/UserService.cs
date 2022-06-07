@@ -231,7 +231,7 @@ namespace Lomba.API.Services
         Task<User> GetUserByIdAsync(Guid Id);
         Task<List<User>> GetUsersAsync();
         void DeleteUserAsync(Guid Id);
-        Task<User> SetEnableAsync(Guid Id, bool enable = true);
+        Task<User> SetEnableAsync(Guid Id, bool setToDisable = false);
         Task<List<OrgaUser>> GetOrgasByUserIdAsync(Guid Id);
 
         Task<List<Role>> GetRolesByUserOrgaAsync(Guid Id, Guid orgaId);
