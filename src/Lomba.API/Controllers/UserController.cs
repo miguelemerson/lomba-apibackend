@@ -152,5 +152,76 @@ namespace Lomba.API.Controllers
         }
         #endregion
 
+        #region Enable User
+        /// <summary>
+        /// Habilita al usuario
+        /// </summary>
+        /// <remarks>
+        /// Ejemplo: PUT /Id
+        /// Id: 01000003-0000-0000-0000-00000000000B
+        /// </remarks>
+        /// <param name="Id">string</param>
+        /// <returns>Usuario habilitado</returns>
+        /// <response code="200">Retorna al usuario habilitado</response>
+        /// <response code="400">Error en el proceso</response>     
+        /// <response code="404">Usuario no encontrado</response>  
+        [HttpPut("enable")]
+        [ProducesResponseType(typeof(User), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(APIResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(APIResponse), StatusCodes.Status404NotFound)]
+        [Authorize(Roles = Default.Roles.Role_Name_SuperAdmin)]
+        public async Task<IActionResult> EnableByIdAsync(string Id)
+        {
+            try
+            {
+                var user = await this._userService.SetEnableAsync(Guid.Parse(Id));
+                if (user == null)
+                {
+                    return NotFound(new APIResponse() { Code = 9, Message = "Usuario no encontrado" });
+                }
+                return Ok(user);
+            }
+            catch (Exception)
+            {
+                return BadRequest(new APIResponse() { Code = 9, Message = "Error en la solicitud" });
+            }
+        }
+        #endregion
+
+        #region Disable User
+        /// <summary>
+        /// Deshabilita al usuario
+        /// </summary>
+        /// <remarks>
+        /// Ejemplo: PUT /Id
+        /// Id: 01000003-0000-0000-0000-00000000000B
+        /// </remarks>
+        /// <param name="Id">string</param>
+        /// <returns>Usuario deshabilitado</returns>
+        /// <response code="200">Retorna al usuario deshabilitado</response>
+        /// <response code="400">Error en el proceso</response>     
+        /// <response code="404">Usuario no encontrado</response>  
+        [HttpPut("disable")]
+        [ProducesResponseType(typeof(User), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(APIResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(APIResponse), StatusCodes.Status404NotFound)]
+        [Authorize(Roles = Default.Roles.Role_Name_SuperAdmin)]
+        public async Task<IActionResult> DisableByIdAsync(string Id)
+        {
+            try
+            {
+                var user = await this._userService.SetEnableAsync(Guid.Parse(Id), true);
+                if (user == null)
+                {
+                    return NotFound(new APIResponse() { Code = 9, Message = "Usuario no encontrado" });
+                }
+                return Ok(user);
+            }
+            catch (Exception)
+            {
+                return BadRequest(new APIResponse() { Code = 9, Message = "Error en la solicitud" });
+            }
+        }
+        #endregion
     }
 }
