@@ -86,6 +86,37 @@ namespace Lomba.API.Controllers
         }
         #endregion
 
+        #region Get Users with Orga count
+        /// <summary>
+        /// Obtiene una lista de usuarios
+        /// </summary>
+        /// <returns>Una lista de usuarios con cantidad de Orgas</returns>
+        /// <response code="200">Retorna el usuario con cantidad de Orgas</response>
+        /// <response code="400">Error en el proceso</response>     
+        /// <response code="404">Usuario no encontrado</response>  
+        [HttpGet("orgacount")]
+        [ProducesResponseType(typeof(List<UserItemAll>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(APIResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(APIResponse), StatusCodes.Status404NotFound)]
+        [Authorize(Roles = Default.Roles.Role_AdminANDSuperAdmin)]
+        public async Task<IActionResult> GetWithOrgaCountAsync()
+        {
+            try
+            {
+                var users = await this._userService.GetUsersWithOrgaCountAsync();
+                if (users == null)
+                {
+                    return NotFound(new APIResponse() { Code = 9, Message = "No hay usuarios" });
+                }
+                return Ok(users);
+            }
+            catch (Exception)
+            {
+                return BadRequest(new APIResponse() { Code = 9, Message = "Error en la solicitud" });
+            }
+        }
+        #endregion
+
         #region Authenticate Users
         /// <summary>
         /// Autenticación de usuario a través de su usuario y contraseña

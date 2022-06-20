@@ -58,7 +58,7 @@ namespace Lomba.API.Services
                 var orgaUsers = await _db.Set<OrgaUser>().AsNoTracking()
                     .Include(u => u.User)
                     .Include(o => o.Orga)
-                    .Include(r => r.Roles)
+                    .Include(r => r.Roles.Where(f=>f.IsDisabled==false))
                     .Where(x => x.User.Id == user.Id &&
                         x.IsDisabled == false).ToListAsync();
 
@@ -123,6 +123,23 @@ namespace Lomba.API.Services
             return await _db.Set<User>().AsNoTracking().ToListAsync();
         }
 
+        public async Task<List<ViewModels.UserItemAll>> GetUsersWithOrgaCountAsync()
+        {
+            List<OrgaUser> orgaUsers =  await _db.Set<OrgaUser>().AsNoTracking()
+                .Include(u => u.User)
+                .Include(r => r.Roles)
+                .Include(g => g.Orga).ToListAsync();
+
+            var userList = orgaUsers.DistinctBy(d=> d.User.Id).Select(
+                u => new UserItemAll { 
+                    User = u.User, 
+                    OrgaCount = orgaUsers.Where(
+                        a => a.User.Id == u.User.Id).Count() }
+                );
+
+
+            return userList.ToList();
+        }
         public async void DeleteUserAsync(Guid Id)
         {
             var user = await _db.Set<User>()
@@ -153,6 +170,7 @@ namespace Lomba.API.Services
 
             return orgauser?.Roles ?? null;
         }
+
 
         public static bool VerifyPasswordHash(string password, byte[] storedHash, byte[] storedSalt)
         {
@@ -235,5 +253,6 @@ namespace Lomba.API.Services
         Task<List<OrgaUser>> GetOrgasByUserIdAsync(Guid Id);
 
         Task<List<Role>> GetRolesByUserOrgaAsync(Guid Id, Guid orgaId);
+        Task<List<ViewModels.UserItemAll>> GetUsersWithOrgaCountAsync();
     }
 }
