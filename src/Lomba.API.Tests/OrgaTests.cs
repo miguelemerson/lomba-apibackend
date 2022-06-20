@@ -128,7 +128,6 @@ namespace Lomba.API.Tests
         [InlineData(Orgas.Org_Id_Lomba, Users.User_Id_SuperAdmin, Roles.Role_Name_Basic)]
         [InlineData(Orgas.Org_Id_Lomba, Users.User_Id_User1, Roles.Role_Name_Admin)]
         [InlineData(Orgas.Org_Id_Without, Users.User_Id_SuperAdmin, Roles.Role_Name_Basic)]
-        [InlineData(Orgas.Org_Id_Lomba, Users.User_Id_System, "")]
         public async void AssociateOrgaUserAsync(string Id, string userId, string roleName)
         {
             var ouInput = new ViewModels.OrgaUserInput()

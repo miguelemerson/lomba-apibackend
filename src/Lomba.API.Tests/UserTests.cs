@@ -11,11 +11,18 @@ namespace Lomba.API.Tests
     public class UserTests
     {
         private UserService _userService;
+        private OrgaService _orgaService;
         public UserTests(Initializer ini)
         {
             if (_userService == null)
             {
                 _userService = new UserService(ini.Context,
+                    ini.Configuration);
+            }
+
+            if (_orgaService == null)
+            {
+                _orgaService = new OrgaService(ini.Context,
                     ini.Configuration);
             }
         }
@@ -55,6 +62,57 @@ namespace Lomba.API.Tests
             var users = await _userService.GetUsersAsync();
             Assert.NotNull(users);
             Assert.Equal(6, users.Count);
+        }
+
+        [Fact]
+        public async void GetUsersWithOrgaCount()
+        {
+            //Se consigue la lista de usuarios actuales
+            var usersOrgaList = await _userService.GetUsersWithOrgaCountAsync();
+            Assert.NotNull(usersOrgaList);
+            Assert.InRange(usersOrgaList.Count, 5, 6);
+
+            //Se verifica que System tiene sólo 1 Orga
+            var userSystem = usersOrgaList.Find(u => u.User.Id == System.Guid.Parse(Default.Users.User_Id_System));
+            Assert.NotNull(userSystem);
+            Assert.Equal(1, userSystem?.OrgaCount);
+
+            //Se prepara asociación para System con General.
+            ViewModels.OrgaUserInput orgaUserInput = new ViewModels.OrgaUserInput { 
+                OrgaId = Default.Orgas.Org_Id_Without, 
+                Roles = new System.Collections.Generic.List<string>() { Default.Roles.Role_Name_SuperAdmin }, 
+                UserId = Default.Users.User_Id_System  };
+
+            //Se asocia System con General.
+            var orgaUser = await _orgaService.AssociateOrgaUserAsync(orgaUserInput);
+            Assert.NotNull(orgaUser);
+
+            //Se consigue la lista de usuarios después del cambio (nueva asociación)
+            usersOrgaList = await _userService.GetUsersWithOrgaCountAsync();
+            Assert.NotNull(usersOrgaList);
+            Assert.InRange(usersOrgaList.Count, 5, 6);
+
+            //Se verifica que System ahora tiene 2 Orgas
+            var userSystem2 = usersOrgaList.Find(u => u.User.Id == System.Guid.Parse(Default.Users.User_Id_System));
+            Assert.NotNull(userSystem2);
+            Assert.Equal(2, userSystem2?.OrgaCount); // <-- Dos organizaciones
+
+            //Se remueve la asociación extra de System
+            var remOrgaUser = await _orgaService.RemoveUserAsync(
+                System.Guid.Parse(orgaUserInput.OrgaId), 
+                System.Guid.Parse(orgaUserInput.UserId));
+
+            //Se consigue la lista de usuarios con la nueva asociación eliminada
+            //Es decir, debe quedar tal como estaba al principio de este test
+            usersOrgaList = await _userService.GetUsersWithOrgaCountAsync();
+            Assert.NotNull(usersOrgaList);
+            Assert.InRange(usersOrgaList.Count, 5, 6);
+
+            //Se verifica que system regresó a tener 1 Orga
+            userSystem = usersOrgaList.Find(u => u.User.Id == System.Guid.Parse(Default.Users.User_Id_System));
+            Assert.NotNull(userSystem);
+            Assert.Equal(1, userSystem?.OrgaCount);
+
         }
 
         [Theory]
