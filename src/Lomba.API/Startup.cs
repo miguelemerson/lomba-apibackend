@@ -25,7 +25,8 @@ namespace Lomba.API
                 dbContext?.Database.Migrate();
             }
             // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment() || app.Environment.IsStaging())
+            if (app.Environment.IsDevelopment() || app.Environment.IsStaging() ||
+                app.Environment.EnvironmentName == "LocalTests")
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();
