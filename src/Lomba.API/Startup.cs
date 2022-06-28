@@ -33,6 +33,7 @@ namespace Lomba.API
             }
             app.UseHttpsRedirection();
             app.UseRouting();
+            app.UseCors();
             app.UseAuthentication();
             app.UseAuthorization();
             app.MapControllers();
@@ -42,6 +43,16 @@ namespace Lomba.API
         {
             // Add services to the container.
             builder.Services.AddControllers();
+
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("LombaPolicy",
+                    policy =>
+                    {
+                        policy.WithOrigins().AllowAnyOrigin();
+                    });
+            });
+
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen(c =>
