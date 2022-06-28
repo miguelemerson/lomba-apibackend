@@ -33,7 +33,13 @@ namespace Lomba.API
             }
             app.UseHttpsRedirection();
             app.UseRouting();
-            app.UseCors();
+            app.UseCors(builder =>
+            {
+                builder
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader();
+            });
             app.UseAuthentication();
             app.UseAuthorization();
             app.MapControllers();
@@ -46,10 +52,13 @@ namespace Lomba.API
 
             builder.Services.AddCors(options =>
             {
-                options.AddPolicy("LombaPolicy",
+                options.AddDefaultPolicy(
                     policy =>
                     {
-                        policy.WithOrigins().AllowAnyOrigin();
+                        policy.WithOrigins("http://localhost", "http://devlocal", "https://localhost", "https://devlocal")
+                        .AllowAnyOrigin()
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
                     });
             });
 
