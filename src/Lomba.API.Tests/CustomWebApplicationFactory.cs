@@ -31,9 +31,12 @@ namespace Lomba.API.Tests
 
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
+            string? mergetest = Environment.GetEnvironmentVariable("MERGETEST");
+            string env = string.IsNullOrWhiteSpace(mergetest) ? "" : "Merge";
+
             IConfiguration _config = new ConfigurationBuilder()
                    .SetBasePath(Directory.GetCurrentDirectory())
-                   .AddJsonFile(@"appsettings.IntegrationTests.json", false, false)
+                   .AddJsonFile(@$"appsettings.{env}IntegrationTests.json", false, false)
                    .AddEnvironmentVariables()
                    .Build();
             

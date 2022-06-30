@@ -21,12 +21,13 @@ namespace Lomba.API.Tests
         private static Initializer? _init;
         public Initializer()
         {
-            string env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "UnitTests";
+            string? mergetest = Environment.GetEnvironmentVariable("MERGETEST");
+            string env = string.IsNullOrWhiteSpace(mergetest) ? "" : "Merge";
 
             if (_config == null)
                 _config = new ConfigurationBuilder()
                    .SetBasePath(Directory.GetCurrentDirectory())
-                   .AddJsonFile(@$"appsettings.{env}.json", false, false)
+                   .AddJsonFile(@$"appsettings.{env}UnitTests.json", false, false)
                    .AddEnvironmentVariables()
                    .Build();
 
