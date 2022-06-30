@@ -17,12 +17,12 @@ namespace Lomba.API.Tests
         : WebApplicationFactory<TStartup>, IDisposable where TStartup : class
     {
         private bool _isDatabaseCleaned = false;
-        private DataContext _context;
+        private DataContext? _context;
         public new void Dispose()
         {
             try
             {
-                _context.Database.EnsureDeleted();
+                _context?.Database.EnsureDeleted();
             }
             catch (Exception)
             { }
