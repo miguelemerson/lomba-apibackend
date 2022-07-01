@@ -1,0 +1,11 @@
+FROM mcr.microsoft.com/dotnet/sdk:6.0 as build
+WORKDIR /app
+COPY . .
+RUN dotnet restore ./Lomba.API/Lomba.API.csproj
+RUN dotnet test ./Lomba.API.Tests/Lomba.API.Tests.csproj -e MERGETEST=merge
+
+FROM mcr.microsoft.com/dotnet/aspnet:6.0 as runtime
+WORKDIR /app
+#COPY --from=build /app/published-app /app
+ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
+#ENTRYPOINT [ "dotnet", "/app/Lomba.API.dll" ]
