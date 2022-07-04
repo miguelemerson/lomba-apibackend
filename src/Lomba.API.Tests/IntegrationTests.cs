@@ -82,8 +82,8 @@ namespace Lomba.API.Tests
                 Password = passWord
             };
 
-            StringContent stringContent = null;
-            HttpResponseMessage resMsg = null;
+            StringContent? stringContent = null;
+            HttpResponseMessage? resMsg = null;
             stringContent = GetStringContent(auth);
             resMsg = await client.PostAsync("/api/v1/User/authenticate", stringContent);
             Assert.True(resMsg.IsSuccessStatusCode);
@@ -93,7 +93,7 @@ namespace Lomba.API.Tests
 
             Assert.NotNull(userModel);
 
-            return userModel;
+            return userModel!;
         }
 
         private static StringContent GetStringContent(object obj)

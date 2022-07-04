@@ -36,7 +36,7 @@ namespace Lomba.API.Tests
         [InlineData(Users.User_Password_User3, true)]
         public void CreatePasswordAndVerify(string passWord, bool result)
         {
-            byte[] passwordHash, passwordSalt = null;
+            byte[]? passwordHash, passwordSalt = null;
             UserService.CreatePasswordHash(passWord, out passwordHash, out passwordSalt);
 
             Assert.Equal<bool>(result, UserService.VerifyPasswordHash(passWord, passwordHash, passwordSalt));
@@ -53,7 +53,7 @@ namespace Lomba.API.Tests
         {
             var user = await _userService.GetUserByIdAsync(System.Guid.Parse(Id));    
             Assert.NotNull(user);
-            Assert.Equal<bool>(result, actual: user.Username.Equals(userName));
+            Assert.Equal<bool>(result, actual: user!.Username!.Equals(userName));
         }
 
         [Fact]

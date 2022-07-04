@@ -41,7 +41,7 @@ namespace Lomba.API.Default
 
         public static Models.User Admin()
         {
-            byte[] passwordHash, passwordSalt = null;
+            byte[]? passwordHash, passwordSalt = null;
             UserService.CreatePasswordHash(User_Password_Admin, out passwordHash, out passwordSalt);
 
             var u = new Models.User()
@@ -58,7 +58,7 @@ namespace Lomba.API.Default
         }
         public static Models.User SuperAdmin()
         {
-            byte[] passwordHash, passwordSalt = null;
+            byte[]? passwordHash, passwordSalt = null;
             UserService.CreatePasswordHash(User_Password_SuperAdmin, out passwordHash, out passwordSalt);
 
             var u = new Models.User()
@@ -76,7 +76,7 @@ namespace Lomba.API.Default
 
         public static Models.User System()
         {
-            byte[] passwordHash, passwordSalt = null;
+            byte[]? passwordHash, passwordSalt = null;
             UserService.CreatePasswordHash(User_Password_System, out passwordHash, out passwordSalt);
 
             var u = new Models.User()
@@ -94,7 +94,7 @@ namespace Lomba.API.Default
 
         public static Models.User User1()
         {
-            byte[] passwordHash, passwordSalt = null;
+            byte[]? passwordHash, passwordSalt = null;
             UserService.CreatePasswordHash(User_Password_User1, out passwordHash, out passwordSalt);
 
             var u = new Models.User()
@@ -112,7 +112,7 @@ namespace Lomba.API.Default
 
         public static Models.User User2()
         {
-            byte[] passwordHash, passwordSalt = null;
+            byte[]? passwordHash, passwordSalt = null;
             UserService.CreatePasswordHash(User_Password_User2, out passwordHash, out passwordSalt);
 
             var u = new Models.User()
@@ -130,7 +130,7 @@ namespace Lomba.API.Default
 
         public static Models.User User3()
         {
-            byte[] passwordHash, passwordSalt = null;
+            byte[]? passwordHash, passwordSalt = null;
             UserService.CreatePasswordHash(User_Password_User3, out passwordHash, out passwordSalt);
 
             var u = new Models.User()

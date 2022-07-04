@@ -28,7 +28,7 @@ namespace Lomba.API.Tests
         {
             var orga = await _orgaService.GetOrgaByIdAsync(System.Guid.Parse(Id));
             Assert.NotNull(orga);
-            Assert.Equal<bool>(result, actual: orga.Name.Equals(name));
+            Assert.Equal<bool>(result, actual: orga.Name!.Equals(name));
         }
 
         [Fact]
@@ -102,8 +102,9 @@ namespace Lomba.API.Tests
             orgauser = await _orgaService.SetUserEnableAsync(System.Guid.Parse(Id),
                             System.Guid.Parse(userId), false);
             Assert.NotNull(orgauser);
+            Assert.NotNull(firstUpdate);
 
-            Assert.InRange<int>(System.DateTime.Compare(firstUpdate.Value, orgauser.UpdatedAt.Value), -1, 0);
+            Assert.InRange<int>(System.DateTime.Compare(firstUpdate!.Value, orgauser.UpdatedAt!.Value), -1, 0);
         }
 
         [Theory]
