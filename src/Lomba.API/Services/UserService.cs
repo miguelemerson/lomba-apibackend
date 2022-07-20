@@ -125,18 +125,19 @@ namespace Lomba.API.Services
 
         public async Task<List<ViewModels.UserItemAll>> GetUsersWithOrgaCountAsync()
         {
+            List<User> users = await _db.Set<User>().AsNoTracking().ToListAsync();
+
             List<OrgaUser> orgaUsers =  await _db.Set<OrgaUser>().AsNoTracking()
                 .Include(u => u.User)
                 .Include(r => r.Roles)
                 .Include(g => g.Orga).ToListAsync();
 
-            var userList = orgaUsers.DistinctBy(d=> d.User.Id).Select(
+            var userList = users.Select(
                 u => new UserItemAll { 
-                    User = u.User, 
+                    User = u, 
                     OrgaCount = orgaUsers.Where(
-                        a => a.User.Id == u.User.Id).Count() }
+                        a => a.User.Id == u.Id).Count() }
                 );
-
 
             return userList.ToList();
         }
